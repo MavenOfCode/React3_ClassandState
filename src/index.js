@@ -6,6 +6,9 @@ import { thisExpression } from '@babel/types';
 class App extends React.Component {
   // First thing called the very first time this class is first created
   // Way to initialize State
+  // good for one -time set
+  // Best practice - do not do data loading in the constructor
+  // OPTIONAL
   constructor(props){
     // Calls base/parent class React.Component constructor function
     super(props);
@@ -14,6 +17,22 @@ class App extends React.Component {
     // ONLY TIME we directly assign this.state value
     this.state = { lat: null , errorMessage: ''};
 
+  }
+
+  // OPTIONAL will be called one time at the start of the lifecycle
+  // good for one-time setup
+  // best practice to do data loading here rather than constructor
+  // componentDidMount()
+
+  // render is called before this method each time
+  // OPTIONAL will be called anytime the component updates itself
+  // good place to do addtional data loading for components
+  // componentDidUpdate()
+
+  // OPTIONAL  could be called if the component was no longer needed
+  // componentWillUnmount()
+
+  componentDidMount(){
     window.navigator.geolocation.getCurrentPosition(
       // argument number 1 - aka succcess callback
       (position)=> {
@@ -26,11 +45,16 @@ class App extends React.Component {
         this.setState( {errorMessage: err.message})
       }
       );
+      console.log("my component is loaded")
+  }
 
+  componentDidUpdate(){
+    console.log("my component did update")
   }
 
   // React requires render method defined for any React.Component class extension
   // Can be called fequently so dont' put other methods/calls in it
+  // NOT OPTIONAL
   render (){
     if(this.state.errorMessage && !this.state.lat){
       return <div>Error: {this.state.errorMessage}</div>;
